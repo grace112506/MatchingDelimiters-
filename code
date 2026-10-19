@@ -1,0 +1,126 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+/*
+Description: Checks if delimiters are properly matched using a stack.
+
+Programmed by: Jobaille Grace O. Torres, BSIT, 48143, Data Structures and Algorithms
+Last Modified: October 16, 2026
+Version: 1.0
+
+Acknowledgement: OpenAI ChatGPT was used to help explain
+and draft the program. The student should test and understand
+the code before submission.
+*/
+
+public class MatchingDelimiters {
+
+    public static boolean isOpening(char n) {
+        return n == '(' || n == '[' || n == '{';
+    }
+
+    public static boolean isClosing(char n) {
+        return n == ')' || n == ']' || n == '}';
+    }
+
+    public static boolean isMatching(char open, char close) {
+        return (open == '(' && close == ')')
+            || (open == '[' && close == ']')
+            || (open == '{' && close == '}');
+    }
+
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in); {
+            Stack<Character> stack = new Stack<>();
+            
+            System.out.print("Enter a delimiter sequence: ");
+            String sequence = input.nextLine();
+            
+            boolean valid = true;
+            String reason = "";
+            
+            System.out.println("\n--- STACK EXECUTION TRACE ---");
+            
+            for (int i = 0; i < sequence.length(); i++) {
+                
+                char n = sequence.charAt(i);
+                
+                System.out.println("\nRead: " + n);
+                
+                if (isOpening(n)) {
+                    
+                    stack.push(n);
+                    
+                    System.out.println("Operation: PUSH " + n);
+                    System.out.println("Stack: " + stack);
+                    
+                } else if (isClosing(n)) {
+                    
+                    if (stack.isEmpty()) {
+                        
+                        valid = false;
+                        reason =
+                                "Closing delimiter has no matching opening delimiter.";
+                        
+                        System.out.println("Operation: INVALID");
+                        System.out.println("Reason: " + reason);
+                        System.out.println("Stack: " + stack);
+                        break;
+                        
+                    } else {
+                        
+                        char top = stack.peek();
+                        
+                        System.out.println("Operation: PEEK " + top);
+                        
+                        if (isMatching(top, n)) {
+                            
+                            stack.pop();
+                            
+                            System.out.println("Operation: POP " + top);
+                            System.out.println("Stack: " + stack);
+                            
+                        } else {
+                            
+                            valid = false;
+                            reason = "Mismatched delimiters: "
+                                    + top + " and " + n;
+                            
+                            System.out.println("Operation: INVALID");
+                            System.out.println("Reason: " + reason);
+                            System.out.println("Stack: " + stack);
+                            break;
+                        }
+                    }
+                    
+                } else {
+                    
+                    System.out.println(
+                            "Operation: SKIP (not a delimiter)"
+                    );
+                    System.out.println("Stack: " + stack);
+                }
+            }
+            
+            if (valid && !stack.isEmpty()) {
+                
+                valid = false;
+                reason = "Unmatched opening delimiter remains: " + stack;
+                
+                System.out.println("\nOperation: INVALID");
+                System.out.println("Reason: " + reason);
+            }
+            
+            System.out.println("\n--- FINAL RESULT ---");
+            
+            if (valid) {
+                System.out.println("Valid");
+            } else {
+                System.out.println("Invalid");
+                System.out.println("Reason: " + reason);
+            }
+        }
+    }
+}
+
